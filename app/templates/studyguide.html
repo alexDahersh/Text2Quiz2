@@ -1,0 +1,87 @@
+{% extends "base.html" %} {% block title %}Study Guide{% endblock %} 
+{% block content %}
+    <div id="popup1" class="overlay">
+        <div class="popup">
+            <h2>Specific settings</h2>
+            <a class="close" href="#">&times;</a>
+            <form method="post" action="">
+                <label for="mcqamount">Amount of multiple choice questions:</label><br>
+                <input type="text" name="mcq_amount" value={{ qamounts[0] }} id="mcqamount"><br><br>
+                <label for="shortqamount">Amount of short questions:</label><br>
+                <input type="text" name="shortq_amount" value={{ qamounts[1] }} id="shortqamount"><br><br>
+                <label for="ynamount">Amount of yes/no questions:</label><br>
+                <input type="text" name="yn_amount" value={{ qamounts[2] }} id="ynamount"><br><br>
+                <label for="keywordamount">Amount of vocab words:</label><br>
+                <input type="text" name="keyword_amount" value={{ qamounts[4] }} id="keywordamount"><br><br>
+                <input type="submit" class="save" name="savesettings" value="Save">
+            </form>
+        </div>
+    </div>
+    <h1>Study Guide</h1>
+    <br />
+    <div class = maindiv>
+        <form method="post" action="" style="z-index: 1">
+            <a class="button" href="#popup1">Click to change amount of questions and keywords</a>
+            <br />
+            <textarea name="context" placeholder="Input text here. For any text with a lot of words put ?break inbetween sections of text. If this is not done every 300 words it will automatically be done leading to unoptimal results." style="width:100%;height:40vh"></textarea>
+            <input type="Submit" name="submit_study_guide" value="Generate study guide">
+        </form>
+    </div>
+    <div>
+        <br><br><br><br><br>
+        {%  if final_output != None %}
+        <b style="font-size:2em">Study Guide:</b><br>
+
+        <p>Summary: </p>
+        {% for summary in final_output['summarys'] %}
+        <p>{{summary}}</p><p> </p>
+        {% endfor %}
+        <br><br>
+
+        {%  if qamounts[4] != 0 %}
+        <b>Keywords (write definition of each):</b><br>
+        {% for keyword in final_output['keywords'] %}
+        <p>{{keyword}}   </p>
+        {% endfor %}
+        {% endif %}
+        <br><br>
+
+        {%  if qamounts[2] != 0 or qamounts[1] != 0 or qamounts[0] != 0 %}
+        <b style="font-size:2em" >Practice questions:</b><br><br> 
+        {% endif %}
+
+        
+
+        {%  if qamounts[0] != 0 %}
+        <b>Multiple choice questions:</b><br>
+        {% for mcq_question in final_output['mcq_questions'] %}   
+        <p>{{mcq_question['question_statement']}}</p><br>
+        <ol type="A">
+            {% for item in mcq_question['options'] %}
+            <li>{{item}}</li>
+            {% endfor %}
+        </ol><br>
+        {% endfor %}
+        {% endif %}
+
+        {%  if qamounts[2] != 0 %}
+        <b>Yes/No questions:</b><br>
+        {% for yn_question in final_output['yn_questions'] %}   
+        <p>{{yn_question}}</p><br><br><br>
+        {% endfor %}
+        {% endif %}
+
+        {%  if qamounts[1] != 0 %}
+        <b>Short questions</b><br>
+        {% for shortq_question in final_output['shortq_questions'] %}   
+        <p>{{shortq_question['Question']}}</p><br><br><br>
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+
+        
+
+
+
+    </div>
+    {% endblock %}
